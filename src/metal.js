@@ -132,10 +132,12 @@ _.extend(Class, {
     // The constructor function for the new subclass is either defined by you
     // (the "constructor" property in your `extend` definition), or defaulted
     // by us to simply call the parent's constructor.
-    if (protoProps && _.has(protoProps, 'constructor')) {
+    if (!protoProps || !_.has(protoProps, 'constructor')) {
+      Child = function() { Parent.apply(this, arguments); };
+    } else if (superTest.test(protoProps.constructor)) {
       Child = wrap(protoProps.constructor, Parent.prototype.constructor);
     } else {
-      Child = function() { Parent.apply(this, arguments); };
+      Child = protoProps.constructor;
     }
 
     // Add static properties to the constructor function, if supplied.
