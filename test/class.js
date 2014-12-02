@@ -38,8 +38,8 @@ describe('Class', function() {
     });
 
     it('should copy over the parent class\'s statics', function() {
-      expect(_.clone(this.Subclass))
-        .to.contain(_.clone(Metal.Class));
+      expect(_.pick(this.Subclass, _.keys(this.Subclass)))
+        .to.contain(_.pick(Metal.Class, _.keys(Metal.Class)));
     });
 
     it('should set __super__ to the parent class\'s prototype', function() {

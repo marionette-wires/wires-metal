@@ -2,7 +2,7 @@ var root;
 
 if (typeof exports !== 'undefined') {
   root = global;
-  root._ = require('underscore');
+  root._ = require('lodash');
   require('6to5/register');
   var Metal = require('../tmp/metal');
 

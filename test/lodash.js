@@ -1,4 +1,4 @@
-describe('Underscore mixins', function() {
+describe('Lodash mixins', function() {
   describe('#isClass', function() {
     beforeEach(function() {
       this.MyClass = Metal.Class.extend().extend();

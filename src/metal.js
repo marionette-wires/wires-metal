@@ -89,7 +89,7 @@ function wrapAll(dest, source) {
  * @memberOf Metal
  */
 var Class = Metal.Class = function() {
-  this.initialize.apply(this, arguments);
+  this.initialize(...arguments);
 };
 
 /**
@@ -102,7 +102,7 @@ var Class = Metal.Class = function() {
  */
 Class.prototype.initialize = _.noop;
 
-_.extend(Class, {
+_.assign(Class, {
 
   /**
    * Creates a new subclass.
@@ -141,7 +141,7 @@ _.extend(Class, {
     }
 
     // Add static properties to the constructor function, if supplied.
-    _.extend(Child, Parent);
+    _.assign(Child, Parent);
     wrapAll(Child, staticProps);
 
     // Set the prototype chain to inherit from `parent`, without calling
@@ -254,7 +254,7 @@ _.extend(Class, {
  */
 var Mixin = Metal.Mixin = function(protoProps) {
   // Add prototype properties (instance properties) to the class, if supplied.
-  _.extend(this, protoProps);
+  _.assign(this, protoProps);
 };
 
 /**
@@ -306,7 +306,7 @@ var Err = Metal.Error = Class.extend.call(Error, {
     var error = Error.call(this, message);
 
     // Copy over all the error-related properties.
-    _.extend(this, _.pick(error, errorProps), _.pick(options, errorProps));
+    _.assign(this, _.pick(error, errorProps), _.pick(options, errorProps));
 
     // Adds a `stack` property to the given error object that will yield the
     // stack trace at the time captureStackTrace was called.
@@ -354,7 +354,7 @@ var Err = Metal.Error = Class.extend.call(Error, {
  * @class Error
  * @mixes Class
  */
-_.extend(Err, Class);
+_.assign(Err, Class);
 
 /**
  * Display a deprecation warning with the provided message.

@@ -1,8 +1,8 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['underscore'], factory);
+    define(['lodash'], factory);
   } else if (typeof exports !== 'undefined') {
-    module.exports = factory(require('underscore'));
+    module.exports = factory(require('lodash'));
   } else {
     root.Metal = factory(root._);
   }
