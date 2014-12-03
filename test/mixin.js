@@ -6,7 +6,7 @@ describe('Mixin', function() {
 
     it('should be an instance of Mixin', function() {
       expect(this.mixin)
-        .to.be.instanceOf(Metal.Mixin)
+        .to.be.instanceOf(Metal.Mixin);
     });
 
     it('should add the properties to the mixin', function() {

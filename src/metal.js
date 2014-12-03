@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 /**
  * @module Metal
  */
@@ -483,3 +485,5 @@ _.mixin({
     return !!value && value instanceof Mixin;
   }
 });
+
+export default Metal;

@@ -5,7 +5,8 @@
   "main": "./dist/metal.js",
   "scripts": {
     "build": "gulp build",
-    "test": "gulp test"
+    "test": "gulp test",
+    "coverage": "gulp coverage"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "gulp-dox": "0.0.1",
     "gulp-eslint": "^0.1.8",
     "gulp-filter": "^1.0.2",
+    "gulp-istanbul": "git://github.com/thejameskyle/gulp-istanbul#isparta",
     "gulp-jshint": "^1.8.5",
     "gulp-mocha": "^1.1.1",
     "gulp-preprocess": "^1.1.1",
