@@ -1,6 +1,7 @@
 var root;
 
 function setup() {
+  root.root;
   root.expect = root.chai.expect;
 
   beforeEach(function() {
@@ -29,7 +30,7 @@ if (typeof exports !== 'undefined') {
   root.mocha.setup('bdd');
   root.onload = function() {
     root.mocha.checkLeaks();
-    root.mocha.globals(['stub', 'spy', 'expect']);
+    root.mocha.globals(['stub', 'spy', 'expect', 'console']);
     root.mocha.run();
     setup();
   };

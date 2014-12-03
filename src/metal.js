@@ -31,7 +31,7 @@ function wrap(method, superMethod) {
  * @private
  * @const {RegExp}
  */
-var superTest = (/xyz/.test(function(){return 'xyz';})) ? /\b_super\b/ : /.*/;
+var superTest = (/xyz/.test(new Function('xyz'))) ? /\b_super\b/ : /.*/;
 
 /**
  * Assigns properties of source object to destination object, wrapping methods

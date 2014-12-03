@@ -37,7 +37,7 @@
   "debug"         : false,
   "eqnull"        : false,
   "esnext"        : true,
-  "evil"          : false,
+  "evil"          : true,
   "expr"          : false,
   "funcscope"     : false,
   "globalstrict"  : false,
