@@ -102,7 +102,7 @@
    * @memberOf Metal
    */
   var Class = Metal.Class = function () {
-    this.initialize.apply(this, Array.from(arguments));
+    this.initialize.apply(this, _slice.call(arguments));
   };
 
   /**
