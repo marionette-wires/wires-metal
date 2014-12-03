@@ -3,6 +3,8 @@ Metal.js
 
 Classes, Mixins, Errors, and more.
 
+[![Travis Status](http://img.shields.io/travis/hackbone/metal.js/master.svg?style=flat&amp;label=travis)](https://travis-ci.org/hackbone/metal.js) [![Code Climate Score](http://img.shields.io/codeclimate/github/hackbone/metal.js.svg?style=flat)](https://codeclimate.com/github/hackbone/metal.js) [![Coverage](http://img.shields.io/codeclimate/coverage/github/hackbone/metal.js.svg?style=flat)](https://codeclimate.com/github/hackbone/metal.js) [![Dependency Status](http://img.shields.io/david/hackbone/metal.js.svg?style=flat)](https://david-dm.org/hackbone/metal.js)
+
 ## Usage
 
 ### Classes
