@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/thejameskyle/metal.js",
   "devDependencies": {
-    "6to5": "^1.10.3",
+    "6to5": "^1.14.6",
     "chai": "^1.9.2",
     "gulp": "^3.8.9",
     "gulp-6to5": "^1.0.1",
