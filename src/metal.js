@@ -366,24 +366,11 @@ var Err = Metal.Error = Class.extend.call(Error, {
     // stack trace.
     // This is useful because we can hide Metal implementation details
     // that are not very helpful for the user.
-    this.captureStackTrace();
+    Err.captureStackTrace(this, Err);
 
     // Add url property to error, if provided.
     if (options.url) {
       this.url = this.urlRoot + options.url;
-    }
-  },
-
-  /**
-   * A safe reference to V8's `Error.captureStackTrace`.
-   *
-   * @public
-   * @method captureStackTrace
-   */
-  captureStackTrace() {
-    // Error.captureStackTrace does not exist in all browsers.
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, Err);
     }
   },
 
@@ -398,6 +385,19 @@ var Err = Metal.Error = Class.extend.call(Error, {
     return `${this.name}: ${this.message}` + (
       this.url ? ` See: ${this.url}` : ''
     );
+  }
+}, {
+
+  /**
+   * A safe reference to V8's `Error.captureStackTrace`.
+   *
+   * @public
+   * @method captureStackTrace
+   */
+  captureStackTrace(target, method) {
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(target, method);
+    }
   }
 });
 
