@@ -449,7 +449,7 @@ var deprecate = Metal.deprecate = function(message, test) {
  * @param {String} prev - The deprecated item.
  * @param {String} next - The replacement for the deprecated item.
  * @param {String} [url] - The url to visit for more help.
- * @return {Sring} - The formatted message.
+ * @return {String} - The formatted message.
  */
 deprecate._format = function(prev, next, url) {
   return (
