@@ -144,7 +144,9 @@ _.assign(Class, {
 
     // Add static properties to the constructor function, if supplied.
     _.assign(Child, Parent);
-    wrapAll(Child, staticProps);
+    if (staticProps) {
+      wrapAll(Child, staticProps);
+    }
 
     // Set the prototype chain to inherit from `parent`, without calling
     // `parent`'s constructor function.
@@ -154,7 +156,9 @@ _.assign(Class, {
 
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
-    wrapAll(Child.prototype, protoProps);
+    if (protoProps) {
+      wrapAll(Child.prototype, protoProps);
+    }
 
     // Set a convenience property in case the parent class is needed later.
     Child.superclass = Parent;
