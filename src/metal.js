@@ -240,13 +240,35 @@ _.assign(Class, {
    * @public
    * @static
    * @method mixin
-   * @param {Object} protoProps - The properties to be added to the constructor.
+   * @param {Object} staticProps - The properties to be added to the constructor.
    * @return {Class} - The class.
    */
   include(staticProps) {
     // Add static properties to the constructor function, if supplied.
     wrapAll(this, staticProps);
     return this;
+  },
+
+  /**
+   * Checks if `value` is a Metal Class.
+   *
+   * ```js
+   * _.isClass(Class.extend(...));
+   * // >> true
+   * _.isClass(new Class());
+   * // >> true
+   * _.isClass(function() {...});
+   * // >> false
+   * _.isClass({...});
+   * // >> false
+   * ```
+   * @public
+   * @method isClass
+   * @memberOf _
+   * @param {*} value - The value to check.
+   */
+  isClass(value) {
+    return !!(value && (value instanceof Class || value.prototype instanceof Class || value === Class));
   }
 });
 
@@ -261,6 +283,29 @@ _.assign(Class, {
 var Mixin = Metal.Mixin = function(protoProps) {
   // Add prototype properties (instance properties) to the class, if supplied.
   _.assign(this, protoProps);
+};
+
+/**
+ * Checks if `value` is a Metal Mixin.
+ *
+ * ```js
+ * _.isMixin(new Mixin());
+ * // >> true
+ * _.isMixin({});
+ * // >> false
+ * _.isMixin(function() {...});
+ * // >> false
+ * _.isMixin(new Class());
+ * // >> false
+ * ```
+ *
+ * @public
+ * @method isMixin
+ * @memberOf _
+ * @param {*} value - The value to check.
+ */
+Mixin.isMixin = function(value) {
+  return !!(value && value instanceof Mixin);
 };
 
 /**
@@ -441,53 +486,5 @@ if (!deprecate._warn) {
  * @memberOf deprecate
  */
 deprecate._cache = {};
-
-_.mixin({
-
-  /**
-   * Checks if `value` is a Metal Class.
-   *
-   * ```js
-   * _.isClass(Class.extend(...));
-   * // >> true
-   * _.isClass(new Class());
-   * // >> true
-   * _.isClass(function() {...});
-   * // >> false
-   * _.isClass({...});
-   * // >> false
-   * ```
-   * @public
-   * @method isClass
-   * @memberOf _
-   * @param {*} value - The value to check.
-   */
-  isClass(value) {
-    return !!value && (value instanceof Class || value.prototype instanceof Class);
-  },
-
-  /**
-   * Checks if `value` is a Metal Mixin.
-   *
-   * ```js
-   * _.isMixin(new Mixin());
-   * // >> true
-   * _.isMixin({});
-   * // >> false
-   * _.isMixin(function() {...});
-   * // >> false
-   * _.isMixin(new Class());
-   * // >> false
-   * ```
-   *
-   * @public
-   * @method isMixin
-   * @memberOf _
-   * @param {*} value - The value to check.
-   */
-  isMixin(value) {
-    return !!value && value instanceof Mixin;
-  }
-});
 
 export default Metal;

@@ -178,4 +178,33 @@ describe('Class', function() {
       });
     });
   });
+
+  describe('#isClass', function() {
+    beforeEach(function() {
+      this.MyClass = Metal.Class.extend().extend();
+      this.MyCtor = function() {};
+    });
+
+    it('should return true for classes', function() {
+      expect(Metal.Class.isClass(this.MyClass))
+        .to.be.true;
+    });
+
+    it('should return true for instances of Class', function() {
+      expect(Metal.Class.isClass(new this.MyClass()))
+        .to.be.true;
+    });
+
+    it('should return false for normal constructors', function() {
+      expect(Metal.Class.isClass(this.MyCtor))
+        .to.be.false;
+    });
+
+    it('should return false for other values', function() {
+      _.each([true, false, undefined, null, 0, 'hi'], function(val) {
+        expect(Metal.Class.isClass(val))
+          .to.be.false;
+      });
+    });
+  });
 });
