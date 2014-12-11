@@ -12,7 +12,7 @@ var Metal = {};
  * @private
  * @method wrap
  * @param {Function} method - The method to call.
- * @param {Function} superMethod - The super method.
+ * @param {Function} superMeqthod - The super method.
  * @return {Function} - wrapped function.
  */
 function _wrap(method, superMethod) {
@@ -317,7 +317,7 @@ const ERROR_PROPS = [
 ];
 
 /**
- * A subclass of the JavaScript Error. Can also add a url based on the urlRoot.
+ * A subclass of the JavaScript Error.
  *
  * ```js
  * throw new Metal.Error('Oh you\'ve really done it now...');
@@ -333,17 +333,11 @@ const ERROR_PROPS = [
 var Err = Metal.Error = Class.extend.call(Error, {
 
   /**
-   * @property {String} urlRoot - The root url to be used in the error message.
-   */
-  urlRoot: 'http://github.com/thejameskyle/metal.js',
-
-  /**
    * @public
    * @constructs Error
    * @param {String} [message] - A description of the error.
    * @param {Object} [options] - Settings for the error.
    * @param {String} [options.message] - A description of the error.
-   * @param {String} [options.url] - The url to visit for more help.
    */
   constructor(message, options = {}) {
     // If options are provided in place of a message, assume message exists on
@@ -367,11 +361,6 @@ var Err = Metal.Error = Class.extend.call(Error, {
     // This is useful because we can hide Metal implementation details
     // that are not very helpful for the user.
     Err.captureStackTrace(this, Err);
-
-    // Add url property to error, if provided.
-    if (options.url) {
-      this.url = this.urlRoot + options.url;
-    }
   },
 
   /**
@@ -382,9 +371,7 @@ var Err = Metal.Error = Class.extend.call(Error, {
    * @returns {String} - Formatted error message.
    */
   toString() {
-    return `${this.name}: ${this.message}` + (
-      this.url ? ` See: ${this.url}` : ''
-    );
+    return `${this.name}: ${this.message}`;
   }
 }, {
 
@@ -415,7 +402,6 @@ _.assign(Err, Class);
  * @param {String|Object} message - A description of the deprecation.
  * @param {String} message.prev - The deprecated item.
  * @param {String} message.next - The replacement for the deprecated item.
- * @param {String} [message.url] - The url to visit for more help.
  * @param {Boolean} [test] - An optional boolean. If falsy, the deprecation will be displayed.
  */
 var deprecate = Metal.deprecate = function(message, test) {
@@ -427,7 +413,7 @@ var deprecate = Metal.deprecate = function(message, test) {
 
   // If message is provided as an object, format the object into a string.
   if (_.isObject(message)) {
-    message = deprecate._format(message.prev, message.next, message.url);
+    message = deprecate._format(message.prev, message.next);
   }
 
   // Ensure that message is a string
@@ -448,15 +434,10 @@ var deprecate = Metal.deprecate = function(message, test) {
  * @memberOf deprecate
  * @param {String} prev - The deprecated item.
  * @param {String} next - The replacement for the deprecated item.
- * @param {String} [url] - The url to visit for more help.
  * @return {String} - The formatted message.
  */
-deprecate._format = function(prev, next, url) {
-  return (
-    `${prev} is going to be removed in the future. ` +
-    `Please use ${next} instead.` +
-    (url ? ` See: ${url}` : '')
-  );
+deprecate._format = function(prev, next) {
+  return `${prev} is going to be removed in the future. Please use ${next} instead.`;
 };
 
 /**
