@@ -15,7 +15,7 @@ var Metal = {};
  * @param {Function} superMethod - The super method.
  * @return {Function} - wrapped function.
  */
-function wrap(method, superMethod) {
+function _wrap(method, superMethod) {
   return function() {
     var prevSuper = this._super;
     this._super = superMethod;
@@ -31,7 +31,7 @@ function wrap(method, superMethod) {
  * @private
  * @const {RegExp}
  */
-var superTest = (/xyz/.test(new Function('xyz'))) ? /\b_super\b/ : /.*/;
+const CONTAINS_SUPER = (/xyz/.test(new Function('xyz'))) ? /\b_super\b/ : /.*/;
 
 /**
  * Assigns properties of source object to destination object, wrapping methods
@@ -42,7 +42,7 @@ var superTest = (/xyz/.test(new Function('xyz'))) ? /\b_super\b/ : /.*/;
  * @param {Object} dest - The destination object.
  * @param {Object} source - The source object.
  */
-function wrapAll(dest, source) {
+function _wrapAll(dest, source) {
   var keys = _.keys(source),
       length = keys.length,
       i, name, method, superMethod, hasSuper;
@@ -58,12 +58,12 @@ function wrapAll(dest, source) {
     superMethod = dest[name];
 
     // Test if new method calls `_super`
-    hasSuper = superTest.test(method);
+    hasSuper = CONTAINS_SUPER.test(method);
 
     // Only wrap the new method if the original method was a function and the
     // new method calls `_super`.
     if (hasSuper && _.isFunction(method) && _.isFunction(superMethod)) {
-      dest[name] = wrap(method, superMethod);
+      dest[name] = _wrap(method, superMethod);
 
     // Otherwise just add the new method or property to the object.
     } else {
@@ -136,8 +136,8 @@ _.assign(Class, {
     // by us to simply call the parent's constructor.
     if (!protoProps || !_.has(protoProps, 'constructor')) {
       Child = function() { Parent.apply(this, arguments); };
-    } else if (superTest.test(protoProps.constructor)) {
-      Child = wrap(protoProps.constructor, Parent.prototype.constructor);
+    } else if (CONTAINS_SUPER.test(protoProps.constructor)) {
+      Child = _wrap(protoProps.constructor, Parent.prototype.constructor);
     } else {
       Child = protoProps.constructor;
     }
@@ -145,7 +145,7 @@ _.assign(Class, {
     // Add static properties to the constructor function, if supplied.
     _.assign(Child, Parent);
     if (staticProps) {
-      wrapAll(Child, staticProps);
+      _wrapAll(Child, staticProps);
     }
 
     // Set the prototype chain to inherit from `parent`, without calling
@@ -157,7 +157,7 @@ _.assign(Class, {
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
     if (protoProps) {
-      wrapAll(Child.prototype, protoProps);
+      _wrapAll(Child.prototype, protoProps);
     }
 
     // Set a convenience property in case the parent class is needed later.
@@ -200,7 +200,7 @@ _.assign(Class, {
    */
   mixin(protoProps) {
     // Add prototype properties (instance properties) to the class, if supplied.
-    wrapAll(this.prototype, protoProps);
+    _wrapAll(this.prototype, protoProps);
     return this;
   },
 
@@ -245,7 +245,7 @@ _.assign(Class, {
    */
   include(staticProps) {
     // Add static properties to the constructor function, if supplied.
-    wrapAll(this, staticProps);
+    _wrapAll(this, staticProps);
     return this;
   },
 
@@ -312,7 +312,7 @@ Mixin.isMixin = function(value) {
  * @private
  * @const {String[]}
  */
-var errorProps = [
+const ERROR_PROPS = [
   'description', 'fileName', 'lineNumber', 'name', 'message', 'number'
 ];
 
@@ -357,7 +357,7 @@ var Err = Metal.Error = Class.extend.call(Error, {
     var error = Error.call(this, message);
 
     // Copy over all the error-related properties.
-    _.assign(this, _.pick(error, errorProps), _.pick(options, errorProps));
+    _.assign(this, _.pick(error, ERROR_PROPS), _.pick(options, ERROR_PROPS));
 
     // Adds a `stack` property to the given error object that will yield the
     // stack trace at the time captureStackTrace was called.
