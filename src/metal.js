@@ -47,11 +47,6 @@ function _wrapAll(dest, source) {
       length = keys.length,
       i, name, method, superMethod, hasSuper;
 
-  // Return if source object is empty
-  if (length === 0) {
-    return;
-  }
-
   for (i = 0; i < length; i++) {
     name = keys[i];
     method = source[name];
