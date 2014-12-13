@@ -263,7 +263,7 @@ _.assign(Class, {
    * @param {*} value - The value to check.
    */
   isClass(value) {
-    return !!(value && (value instanceof Class || value.prototype instanceof Class || value === Class));
+    return !!value && (value instanceof Class || value.prototype instanceof Class || value === Class);
   }
 });
 
@@ -300,7 +300,7 @@ var Mixin = Metal.Mixin = function(protoProps) {
  * @param {*} value - The value to check.
  */
 Mixin.isMixin = function(value) {
-  return !!(value && value instanceof Mixin);
+  return !!value && value instanceof Mixin;
 };
 
 /**
