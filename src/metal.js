@@ -444,14 +444,7 @@ deprecate._format = function(prev, next) {
  * @memberOf deprecate
  * @param {*...} - The values to warn in the console.
  */
-if (typeof console !== 'undefined') {
-  deprecate._warn = console.warn || console.log;
-}
-
-// If `console.warn` and `console.log` weren't found, just noop.
-if (!deprecate._warn) {
-  deprecate._warn = _.noop;
-}
+deprecate._warn = typeof console !== 'undefined' && (console.warn || console.log) || _.noop;
 
 /**
  * An internal cache to avoid sending the same deprecation warning multiple
