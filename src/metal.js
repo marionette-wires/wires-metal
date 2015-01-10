@@ -47,11 +47,6 @@ function _wrapAll(dest, source) {
       length = keys.length,
       i, name, method, superMethod, hasSuper;
 
-  // Return if source object is empty
-  if (length === 0) {
-    return;
-  }
-
   for (i = 0; i < length; i++) {
     name = keys[i];
     method = source[name];
@@ -268,7 +263,7 @@ _.assign(Class, {
    * @param {*} value - The value to check.
    */
   isClass(value) {
-    return !!(value && (value instanceof Class || value.prototype instanceof Class || value === Class));
+    return !!value && (value instanceof Class || value.prototype instanceof Class || value === Class);
   }
 });
 
@@ -305,7 +300,7 @@ var Mixin = Metal.Mixin = function(protoProps) {
  * @param {*} value - The value to check.
  */
 Mixin.isMixin = function(value) {
-  return !!(value && value instanceof Mixin);
+  return !!value && value instanceof Mixin;
 };
 
 /**
@@ -449,14 +444,7 @@ deprecate._format = function(prev, next) {
  * @memberOf deprecate
  * @param {*...} - The values to warn in the console.
  */
-if (typeof console !== 'undefined') {
-  deprecate._warn = console.warn || console.log;
-}
-
-// If `console.warn` and `console.log` weren't found, just noop.
-if (!deprecate._warn) {
-  deprecate._warn = _.noop;
-}
+deprecate._warn = typeof console !== 'undefined' && (console.warn || console.log) || _.noop;
 
 /**
  * An internal cache to avoid sending the same deprecation warning multiple
