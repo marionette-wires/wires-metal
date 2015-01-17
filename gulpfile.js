@@ -40,7 +40,7 @@ gulp.task('build:tmp', function() {
 });
 
 gulp.task('docs', function() {
-  return gulp.src('src/metal.js')
+  return gulp.src('src/' + packageName + '.js')
     .pipe(dox())
     .pipe(gulp.dest('docs/'));
 });
