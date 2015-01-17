@@ -1,6 +1,6 @@
 {
   "name": "wires-metal",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Classes, Mixins, Errors, and more",
   "main": "./dist/wires-metal.js",
   "scripts": {
