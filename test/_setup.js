@@ -18,9 +18,11 @@ function setup() {
 }
 
 if (typeof exports !== 'undefined') {
+  var packageName = require('../package').name;
+
   root = global;
   root._ = require('lodash');
-  root.Metal = require('../src/metal').default;
+  root.Metal = require('../src/' + packageName);
   root.chai = require('chai');
   root.sinon = require('sinon');
   root.chai.use(require('sinon-chai'));

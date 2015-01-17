@@ -2,8 +2,9 @@ var update;
 
 if (typeof exports !== 'undefined') {
   update = function(done) {
-    delete require.cache[require.resolve('../src/metal')];
-    Metal = require('../src/metal').default;
+    var packageName = require('../package').name;
+    delete require.cache[require.resolve('../src/' + packageName)];
+    Metal = require('../src/' + packageName);
     done();
   };
 } else {

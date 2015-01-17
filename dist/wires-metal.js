@@ -1,15 +1,14 @@
-(function (root, factory) {
+(function (factory) {
   if (typeof define === "function" && define.amd) {
-    define(["lodash"], factory);
-  } else if (typeof exports !== "undefined") {
-    module.exports = factory(require("lodash"));
-  } else {
-    root.Metal = factory(root._);
+    define(["exports", "module", "lodash"], factory);
+  } else if (typeof exports !== "undefined" && typeof module !== "undefined") {
+    factory(exports, module, require("lodash"));
   }
-})(this, function (_) {
+})(function (exports, module, _lodash) {
   "use strict";
 
-  var _slice = Array.prototype.slice;
+  var _ = _lodash;
+
 
   /**
    * @module Metal
@@ -23,10 +22,10 @@
    * @private
    * @method wrap
    * @param {Function} method - The method to call.
-   * @param {Function} superMethod - The super method.
+   * @param {Function} superMeqthod - The super method.
    * @return {Function} - wrapped function.
    */
-  function wrap(method, superMethod) {
+  function _wrap(method, superMethod) {
     return function () {
       var prevSuper = this._super;
       this._super = superMethod;
@@ -42,9 +41,7 @@
    * @private
    * @const {RegExp}
    */
-  var superTest = (/xyz/.test(function () {
-    return "xyz";
-  })) ? /\b_super\b/ : /.*/;
+  var CONTAINS_SUPER = /xyz/.test(new Function("xyz")) ? /\b_super\b/ : /.*/;
 
   /**
    * Assigns properties of source object to destination object, wrapping methods
@@ -55,13 +52,8 @@
    * @param {Object} dest - The destination object.
    * @param {Object} source - The source object.
    */
-  function wrapAll(dest, source) {
+  function _wrapAll(dest, source) {
     var keys = _.keys(source), length = keys.length, i, name, method, superMethod, hasSuper;
-
-    // Return if source object is empty
-    if (length === 0) {
-      return;
-    }
 
     for (i = 0; i < length; i++) {
       name = keys[i];
@@ -69,12 +61,12 @@
       superMethod = dest[name];
 
       // Test if new method calls `_super`
-      hasSuper = superTest.test(method);
+      hasSuper = CONTAINS_SUPER.test(method);
 
       // Only wrap the new method if the original method was a function and the
       // new method calls `_super`.
       if (hasSuper && _.isFunction(method) && _.isFunction(superMethod)) {
-        dest[name] = wrap(method, superMethod);
+        dest[name] = _wrap(method, superMethod);
 
         // Otherwise just add the new method or property to the object.
       } else {
@@ -102,7 +94,8 @@
    * @memberOf Metal
    */
   var Class = Metal.Class = function () {
-    this.initialize.apply(this, _slice.call(arguments));
+    var _ref;
+    (_ref = this).initialize.apply(_ref, arguments);
   };
 
   /**
@@ -116,6 +109,7 @@
   Class.prototype.initialize = _.noop;
 
   _.assign(Class, {
+
     /**
      * Creates a new subclass.
      *
@@ -137,7 +131,7 @@
      * @param {Object} [protoProps] - The properties to be added to the prototype.
      * @param {Object} [staticProps] - The properties to be added to the constructor.
      */
-    extend: function (protoProps, staticProps) {
+    extend: function extend(protoProps, staticProps) {
       var Parent = this;
       var Child;
 
@@ -148,15 +142,17 @@
         Child = function () {
           Parent.apply(this, arguments);
         };
-      } else if (superTest.test(protoProps.constructor)) {
-        Child = wrap(protoProps.constructor, Parent.prototype.constructor);
+      } else if (CONTAINS_SUPER.test(protoProps.constructor)) {
+        Child = _wrap(protoProps.constructor, Parent.prototype.constructor);
       } else {
         Child = protoProps.constructor;
       }
 
       // Add static properties to the constructor function, if supplied.
       _.assign(Child, Parent);
-      wrapAll(Child, staticProps);
+      if (staticProps) {
+        _wrapAll(Child, staticProps);
+      }
 
       // Set the prototype chain to inherit from `parent`, without calling
       // `parent`'s constructor function.
@@ -168,7 +164,9 @@
 
       // Add prototype properties (instance properties) to the subclass,
       // if supplied.
-      wrapAll(Child.prototype, protoProps);
+      if (protoProps) {
+        _wrapAll(Child.prototype, protoProps);
+      }
 
       // Set a convenience property in case the parent class is needed later.
       Child.superclass = Parent;
@@ -208,9 +206,9 @@
      * @param {Object} protoProps - The properties to be added to the prototype.
      * @return {Class} - The class.
      */
-    mixin: function (protoProps) {
+    mixin: function mixin(protoProps) {
       // Add prototype properties (instance properties) to the class, if supplied.
-      wrapAll(this.prototype, protoProps);
+      _wrapAll(this.prototype, protoProps);
       return this;
     },
 
@@ -250,13 +248,35 @@
      * @public
      * @static
      * @method mixin
-     * @param {Object} protoProps - The properties to be added to the constructor.
+     * @param {Object} staticProps - The properties to be added to the constructor.
      * @return {Class} - The class.
      */
-    include: function (staticProps) {
+    include: function include(staticProps) {
       // Add static properties to the constructor function, if supplied.
-      wrapAll(this, staticProps);
+      _wrapAll(this, staticProps);
       return this;
+    },
+
+    /**
+     * Checks if `value` is a Metal Class.
+     *
+     * ```js
+     * _.isClass(Class.extend(...));
+     * // >> true
+     * _.isClass(new Class());
+     * // >> true
+     * _.isClass(function() {...});
+     * // >> false
+     * _.isClass({...});
+     * // >> false
+     * ```
+     * @public
+     * @method isClass
+     * @memberOf _
+     * @param {*} value - The value to check.
+     */
+    isClass: function isClass(value) {
+      return !!value && (value instanceof Class || value.prototype instanceof Class || value === Class);
     }
   });
 
@@ -274,13 +294,36 @@
   };
 
   /**
+   * Checks if `value` is a Metal Mixin.
+   *
+   * ```js
+   * _.isMixin(new Mixin());
+   * // >> true
+   * _.isMixin({});
+   * // >> false
+   * _.isMixin(function() {...});
+   * // >> false
+   * _.isMixin(new Class());
+   * // >> false
+   * ```
+   *
+   * @public
+   * @method isMixin
+   * @memberOf _
+   * @param {*} value - The value to check.
+   */
+  Mixin.isMixin = function (value) {
+    return !!value && value instanceof Mixin;
+  };
+
+  /**
    * @private
    * @const {String[]}
    */
-  var errorProps = ["description", "fileName", "lineNumber", "name", "message", "number"];
+  var ERROR_PROPS = ["description", "fileName", "lineNumber", "name", "message", "number"];
 
   /**
-   * A subclass of the JavaScript Error. Can also add a url based on the urlRoot.
+   * A subclass of the JavaScript Error.
    *
    * ```js
    * throw new Metal.Error('Oh you\'ve really done it now...');
@@ -294,10 +337,6 @@
    * @uses Metal.Class
    */
   var Err = Metal.Error = Class.extend.call(Error, {
-    /**
-     * @property {String} urlRoot - The root url to be used in the error message.
-     */
-    urlRoot: "http://github.com/thejameskyle/metal.js",
 
     /**
      * @public
@@ -305,10 +344,9 @@
      * @param {String} [message] - A description of the error.
      * @param {Object} [options] - Settings for the error.
      * @param {String} [options.message] - A description of the error.
-     * @param {String} [options.url] - The url to visit for more help.
      */
-    constructor: function (message, options) {
-      if (options === undefined) options = {};
+    constructor: function constructor(message) {
+      var options = arguments[1] === undefined ? {} : arguments[1];
       // If options are provided in place of a message, assume message exists on
       // options.
       if (_.isObject(message)) {
@@ -320,7 +358,7 @@
       var error = Error.call(this, message);
 
       // Copy over all the error-related properties.
-      _.assign(this, _.pick(error, errorProps), _.pick(options, errorProps));
+      _.assign(this, _.pick(error, ERROR_PROPS), _.pick(options, ERROR_PROPS));
 
       // Adds a `stack` property to the given error object that will yield the
       // stack trace at the time captureStackTrace was called.
@@ -329,25 +367,7 @@
       // stack trace.
       // This is useful because we can hide Metal implementation details
       // that are not very helpful for the user.
-      this.captureStackTrace();
-
-      // Add url property to error, if provided.
-      if (options.url) {
-        this.url = this.urlRoot + options.url;
-      }
-    },
-
-    /**
-     * A safe reference to V8's `Error.captureStackTrace`.
-     *
-     * @public
-     * @method captureStackTrace
-     */
-    captureStackTrace: function () {
-      // Error.captureStackTrace does not exist in all browsers.
-      if (Error.captureStackTrace) {
-        Error.captureStackTrace(this, Err);
-      }
+      Err.captureStackTrace(this, Err);
     },
 
     /**
@@ -357,8 +377,21 @@
      * @method toString
      * @returns {String} - Formatted error message.
      */
-    toString: function () {
-      return "" + this.name + ": " + this.message + (this.url ? " See: " + this.url : "");
+    toString: function toString() {
+      return "" + this.name + ": " + this.message;
+    }
+  }, {
+
+    /**
+     * A safe reference to V8's `Error.captureStackTrace`.
+     *
+     * @public
+     * @method captureStackTrace
+     */
+    captureStackTrace: function captureStackTrace(target, method) {
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(target, method);
+      }
     }
   });
 
@@ -376,7 +409,6 @@
    * @param {String|Object} message - A description of the deprecation.
    * @param {String} message.prev - The deprecated item.
    * @param {String} message.next - The replacement for the deprecated item.
-   * @param {String} [message.url] - The url to visit for more help.
    * @param {Boolean} [test] - An optional boolean. If falsy, the deprecation will be displayed.
    */
   var deprecate = Metal.deprecate = function (message, test) {
@@ -387,7 +419,7 @@
 
     // If message is provided as an object, format the object into a string.
     if (_.isObject(message)) {
-      message = deprecate._format(message.prev, message.next, message.url);
+      message = deprecate._format(message.prev, message.next);
     }
 
     // Ensure that message is a string
@@ -408,11 +440,10 @@
    * @memberOf deprecate
    * @param {String} prev - The deprecated item.
    * @param {String} next - The replacement for the deprecated item.
-   * @param {String} [url] - The url to visit for more help.
-   * @return {Sring} - The formatted message.
+   * @return {String} - The formatted message.
    */
-  deprecate._format = function (prev, next, url) {
-    return ("" + prev + " is going to be removed in the future. " + ("Please use " + next + " instead.") + (url ? " See: " + url : ""));
+  deprecate._format = function (prev, next) {
+    return "" + prev + " is going to be removed in the future. Please use " + next + " instead.";
   };
 
   /**
@@ -424,14 +455,7 @@
    * @memberOf deprecate
    * @param {*...} - The values to warn in the console.
    */
-  if (typeof console !== "undefined") {
-    deprecate._warn = console.warn || console.log;
-  }
-
-  // If `console.warn` and `console.log` weren't found, just noop.
-  if (!deprecate._warn) {
-    deprecate._warn = _.noop;
-  }
+  deprecate._warn = typeof console !== "undefined" && (console.warn || console.log) || _.noop;
 
   /**
    * An internal cache to avoid sending the same deprecation warning multiple
@@ -443,53 +467,6 @@
    */
   deprecate._cache = {};
 
-  _.mixin({
-    /**
-     * Checks if `value` is a Metal Class.
-     *
-     * ```js
-     * _.isClass(Class.extend(...));
-     * // >> true
-     * _.isClass(new Class());
-     * // >> true
-     * _.isClass(function() {...});
-     * // >> false
-     * _.isClass({...});
-     * // >> false
-     * ```
-     * @public
-     * @method isClass
-     * @memberOf _
-     * @param {*} value - The value to check.
-     */
-    isClass: function (value) {
-      return !!value && (value instanceof Class || value.prototype instanceof Class);
-    },
-
-    /**
-     * Checks if `value` is a Metal Mixin.
-     *
-     * ```js
-     * _.isMixin(new Mixin());
-     * // >> true
-     * _.isMixin({});
-     * // >> false
-     * _.isMixin(function() {...});
-     * // >> false
-     * _.isMixin(new Class());
-     * // >> false
-     * ```
-     *
-     * @public
-     * @method isMixin
-     * @memberOf _
-     * @param {*} value - The value to check.
-     */
-    isMixin: function (value) {
-      return !!value && value instanceof Mixin;
-    }
-  });
-
-  return Metal;
+  module.exports = Metal;
 });
-//# sourceMappingURL=metal.js.map
+//# sourceMappingURL=wires-metal.js.map

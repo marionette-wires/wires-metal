@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 /**
  * @module Metal
@@ -263,7 +263,11 @@ _.assign(Class, {
    * @param {*} value - The value to check.
    */
   isClass(value) {
-    return !!value && (value instanceof Class || value.prototype instanceof Class || value === Class);
+    return !!value && (
+      value instanceof Class ||
+      value.prototype instanceof Class ||
+      value === Class
+    );
   }
 });
 

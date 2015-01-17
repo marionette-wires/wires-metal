@@ -1,9 +1,9 @@
-Metal.js
-========
+Wires Metal
+===========
 
 Classes, Mixins, Errors, and more.
 
-[![Travis Status](http://img.shields.io/travis/hackbone/metal.js/master.svg?style=flat&amp;label=travis)](https://travis-ci.org/hackbone/metal.js) [![Code Climate Score](http://img.shields.io/codeclimate/github/hackbone/metal.js.svg?style=flat)](https://codeclimate.com/github/hackbone/metal.js) [![Coverage](http://img.shields.io/codeclimate/coverage/github/hackbone/metal.js.svg?style=flat)](https://codeclimate.com/github/hackbone/metal.js) [![Dependency Status](http://img.shields.io/david/hackbone/metal.js.svg?style=flat)](https://david-dm.org/hackbone/metal.js)
+[![Travis Status](http://img.shields.io/travis/marionette-wires/wires-metal/master.svg?style=flat&amp;label=travis)](https://travis-ci.org/marionette-wires/wires-metal) [![Code Climate Score](http://img.shields.io/codeclimate/github/marionette-wires/wires-metal.svg?style=flat)](https://codeclimate.com/github/marionette-wires/wires-metal) [![Coverage](http://img.shields.io/codeclimate/coverage/github/marionette-wires/wires-metal.svg?style=flat)](https://codeclimate.com/github/marionette-wires/wires-metal) [![Dependency Status](http://img.shields.io/david/marionette-wires/wires-metal.svg?style=flat)](https://david-dm.org/marionette-wires/wires-metal)
 
 ## Usage
 
@@ -85,7 +85,7 @@ var secondClass = new SecondClass();
 [clone](http://git-scm.com/docs/git-clone) this repo.
 
 ```
-git clone git@github.com:thejameskyle/metal.js.git && cd metal.js
+git clone git@github.com:marionette-wires/wires-metal.git && cd wires-metal
 ```
 
 Make sure [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.org/) are
