@@ -1,39 +1,22 @@
-var root;
+global.Metal = require('../src/' + require('../package').name);
 
-function setup() {
-  root.root;
-  root.expect = root.chai.expect;
+var _ = require('lodash');
+var chai = require('chai');
+var sinon = require('sinon');
+chai.use(require('sinon-chai'));
 
-  beforeEach(function() {
-    this.sandbox = root.sinon.sandbox.create();
-    root.stub = this.sandbox.stub.bind(this.sandbox);
-    root.spy  = this.sandbox.spy.bind(this.sandbox);
-  });
+global._ = _;
+global.expect = expect;
 
-  afterEach(function() {
-    delete root.stub;
-    delete root.spy;
-    this.sandbox.restore();
-  });
-}
+var sandbox;
+beforeEach(function() {
+  sandbox = sinon.sandbox.create();
+  global.stub = _.bind(sandbox.stub, sandbox);
+  global.spy  = _.bind(sandbox.spy, sandbox);
+});
 
-if (typeof exports !== 'undefined') {
-  var packageName = require('../package').name;
-
-  root = global;
-  root._ = require('lodash');
-  root.Metal = require('../src/' + packageName);
-  root.chai = require('chai');
-  root.sinon = require('sinon');
-  root.chai.use(require('sinon-chai'));
-  setup();
-} else {
-  root = window;
-  root.mocha.setup('bdd');
-  root.onload = function() {
-    root.mocha.checkLeaks();
-    root.mocha.globals(['stub', 'spy', 'expect', 'console']);
-    root.mocha.run();
-    setup();
-  };
-}
+afterEach(function() {
+  delete global.stub;
+  delete global.spy;
+  sandbox.restore();
+});
