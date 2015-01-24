@@ -6,7 +6,7 @@ var sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
 global._ = _;
-global.expect = expect;
+global.expect = chai.expect;
 
 var sandbox;
 beforeEach(function() {
