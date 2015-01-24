@@ -12,7 +12,7 @@ Classes, Mixins, Errors, and more.
 Classes are objects that you can instantiate with `new Class()`. You can also create a **subclass** from any existing class by calling its `extend()` method.
 
 ```js
-import {Class} from 'metal';
+import {Class} from 'wires-metal';
 
 var MyClass = Class.extend({
   initialize(options) {
@@ -32,7 +32,7 @@ var myClass = new MyClass({
 When working with multiple classes, sometimes you want to share functionality between them. You can easily do this by creating a new `Mixin` and adding it to all the classes that need it.
 
 ```js
-import {Mixin, Class} from 'metal';
+import {Mixin, Class} from 'wires-metal';
 
 var MyMixin = new Mixin({
   alert(message) {
@@ -57,7 +57,7 @@ var myClass = new MyClass();
 When working with subclasses, sometimes you want to modify one of the parent's methods and then calling the parent method inside. You can easily do this by calling `_super`.
 
 ```js
-import {Class} from 'metal';
+import {Class} from 'wires-metal';
 
 var FirstClass = Class.extend({
   initialize() {
