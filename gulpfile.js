@@ -1,4 +1,5 @@
 var gulp        = require('gulp');
+var esperanto   = require('gulp-esperanto');
 var sourcemaps  = require('gulp-sourcemaps');
 var to5         = require('gulp-6to5');
 var rename      = require('gulp-rename');
@@ -8,13 +9,14 @@ var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var mocha       = require('gulp-mocha');
 var istanbul    = require('gulp-istanbul');
-var dox         = require('gulp-dox');
+var isparta     = require('isparta');
 var packageName = require('./package').name;
 
 gulp.task('build', function() {
   return gulp.src('src/' + packageName + '.js')
     .pipe(sourcemaps.init())
-    .pipe(to5({ modules: 'umd' }))
+    .pipe(to5({ blacklist: ['es6.modules'], loose: 'all' }))
+    .pipe(esperanto({ strict: false, type: 'umd', name: 'Metal' }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'))
     .pipe(filter(['*', '!**/*.js.map']))
@@ -25,14 +27,8 @@ gulp.task('build', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('docs', function() {
-  return gulp.src('src/' + packageName + '.js')
-    .pipe(dox())
-    .pipe(gulp.dest('docs/'));
-});
-
 gulp.task('jshint', function() {
-  return gulp.src(['src/**/*.js', 'test/**/*.js', '!src/wrapper.js'])
+  return gulp.src(['src/**/*.js', 'test/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
 });
@@ -43,17 +39,18 @@ function test() {
 }
 
 gulp.task('mocha', function() {
-  require('6to5/register')({ modules: 'common' });
+  require('6to5/register');
   return test();
 });
 
 gulp.task('coverage', function(done) {
   gulp.src(['src/' + packageName + '.js'])
-    .pipe(istanbul())
+    .pipe(istanbul({ instrumenter: isparta.Instrumenter }))
+    .pipe(istanbul.hookRequire())
     .on('finish', function() {
       return test()
-      .pipe(istanbul.writeReports())
-      .on('end', done);
+        .pipe(istanbul.writeReports())
+        .on('end', done);
     });
 });
 
