@@ -1,18 +1,9 @@
-(function (factory) {
-  if (typeof define === "function" && define.amd) {
-    define(["exports", "module", "lodash"], factory);
-  } else if (typeof exports !== "undefined" && typeof module !== "undefined") {
-    factory(exports, module, require("lodash"));
-  }
-})(function (exports, module, _lodash) {
-  "use strict";
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('lodash')) :
+  typeof define === 'function' && define.amd ? define(['lodash'], factory) :
+  global.Metal = factory(global._)
+}(this, function (_) { 'use strict';
 
-  var _ = _lodash;
-
-
-  /**
-   * @module Metal
-   */
   var Metal = {};
 
   /**
@@ -53,7 +44,13 @@
    * @param {Object} source - The source object.
    */
   function _wrapAll(dest, source) {
-    var keys = _.keys(source), length = keys.length, i, name, method, superMethod, hasSuper;
+    var keys = _.keys(source),
+        length = keys.length,
+        i,
+        name,
+        method,
+        superMethod,
+        hasSuper;
 
     for (i = 0; i < length; i++) {
       name = keys[i];
@@ -467,6 +464,8 @@
    */
   deprecate._cache = {};
 
-  module.exports = Metal;
-});
-//# sourceMappingURL=wires-metal.js.map
+
+  return Metal;
+
+}));
+//# sourceMappingURL=./wires-metal.js.map
