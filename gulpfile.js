@@ -15,14 +15,14 @@ var packageName = require('./package').name;
 gulp.task('build', function() {
   return gulp.src('src/' + packageName + '.js')
     .pipe(sourcemaps.init())
-    .pipe(to5({ blacklist: ['es6.modules'], loose: 'all' }))
-    .pipe(esperanto({ strict: false, type: 'umd', name: 'Metal' }))
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('dist'))
-    .pipe(filter(['*', '!**/*.js.map']))
-    .pipe(uglify())
-    .on('error', console.log)
-    .pipe(rename({ extname: '.min.js' }))
+      .pipe(to5({ blacklist: ['es6.modules', 'useStrict'], loose: 'all' }))
+      .pipe(esperanto({ strict: false, type: 'umd', name: 'Metal' }))
+    .pipe(sourcemaps.write('./', { addComment: false }))
+      .pipe(gulp.dest('dist'))
+      .pipe(filter(['*', '!**/*.js.map']))
+      .pipe(uglify())
+      .on('error', console.log)
+      .pipe(rename({ extname: '.min.js' }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'));
 });
